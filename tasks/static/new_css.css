@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Uchen&display=swap");
+* {
+  box-sizing: border-box;
+}
+
+body > .tasks_contain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body {
+  background-color: rgb(184, 206, 199);
+  font-family: "Uchen", serif;
+}
+
+.header {
+  font-family: "Uchen", serif;
+}
+
+/* .row {
+        visibility: hidden;
+      } */
+
+.row {
+  display: flex;
+  flex-direction: column;
+  max-height: 30%;
+  font-weight: bold;
+  border: 1.3px solid brown;
+  border-radius: 2.3em;
+  padding: 1.4em;
+  margin: 0.9em;
+  background-color: rgb(142, 168, 168);
+}
+
+.contain_tab {
+  display: block;
+  max-height: 80vh;
+  border: 1.6px solid brown;
+  border-radius: 2.5em;
+  padding: 2em;
+  overflow: scroll;
+}
+
+button {
+  border-radius: 2.1em;
+}

@@ -1,0 +1,199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Tasks</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="{% static  'new_css.css' %}">
+
+  </head>
+
+  <body>
+    <div class="tasks_contain">
+      <div class="tasks">
+        <table>
+        <td>
+          <textarea
+            class="task_descrip"
+            name=""
+            id=""
+            cols="30"
+            rows="10"
+            
+          ></textarea>
+        </td>
+        <td><td><button class="add_task">add a task</button></td></td>
+        <tr rowspan='3'>
+          <th class="header">To do list</th>
+        </tr>
+      </table>
+        <table class="contain_tab">          
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // textbox = document.createElement("textarea");
+      // butt = document.createElement("button");
+      // butt.innerText = "send data";
+      // textbox.classList.add("mytext");
+      // butt.classList.add("enter_data");
+      let count = 0;
+      let insertion =(task_name,time,id)=>{
+        let elem=`<tr class="row" >
+                  <td class="task">${task_name}</td>
+                  <td class="time_">${time}</td>
+                  <td><button name="${id}" class="delete_task">delete a task</button></td>
+                  <td><button name="${id}" class="update_task">update a task</button></td>
+                  </tr>`;
+        $('.contain_tab').prepend(elem);
+      }
+
+
+      // let update_data =(element)=>{
+      //   let elem=document.createElement('input');
+      //   let butt=document.createElement('button');
+      //   butt.innerHTML='update data';
+      //   butt.setAttribute('class','update_data');
+      //   elem.setAttribute('class','updated_text');
+      //   element.insertAdjacentElement('afterend',elem);
+      //   elem.insertAdjacentElement('afterend',butt);
+      // } 
+
+
+        let get_data= ()=>{
+          $.ajax({
+          url: "/get_tasks/",
+          type: "GET",
+          contentType: "application/json",
+          dataType: "json",
+          success: function (data, status, xhr) {
+            console.log(status);
+            console.log(data);
+            console.log(typeof data);
+            data.forEach(element => {
+              insertion(element.task_name,element.time,element.id);
+              
+            });
+
+            
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+          
+        }
+      $(document).ready(function () {
+        console.log("working");
+        
+        get_data();
+       
+      });
+
+
+      $(".add_task").click(function (event) {
+        event.stopPropagation();
+        console.log("ADD TASK PRESSED");
+        // console.log($(".task_descrip").val());
+        val=$(".task_descrip").val();
+        $.ajax({
+          url: "/add_task/",
+          type: "GET",
+          contentType: "application/json",
+          dataType: "json",
+          data: {
+            task: val,
+          },
+          success: function (data, status, xhr) {
+            console.log(status);
+            console.log(data);
+            insertion(data.task_name,data.time,data.id);
+            
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+     
+      });
+
+
+      $('body').on('click', '.delete_task',function (event) {
+        event.stopPropagation();
+        console.log(" DELETE BUTTON PRESSED");
+        id_del= this.getAttribute('name');
+        curr_elem=this.closest('.row');
+        curr_elem.remove();
+        $.ajax({
+          url: "/remove_task/",
+          type: "GET",
+          contentType: "application/json",
+          dataType: "json",
+          data: {
+            id: id_del,
+          },
+          success: function (data, status, xhr) {
+            
+            console.log(status);
+            console.log(data);
+            console.log(typeof data);
+           
+          },
+          error: function (error) {
+            
+            console.log(error);
+          },
+        });
+      
+      });
+
+
+
+
+      $('body').on('click', '.update_task', function(){
+        // update_data(this);
+        console.log(" update BUTTON PRESSED");
+        id_up = this.getAttribute('name');
+        console.log($('.task_descrip').val());
+
+        val= $('.task_descrip').val();
+        console.log(val);
+        $.ajax({
+            url: "/update_task/",
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            data:{
+              id:id_up,
+              text:$('.task_descrip').val()
+            },
+            success: function (data, status, xhr) {
+              console.log(status);
+              console.log(data);
+
+              
+            },
+            error: function (error) {
+              
+              console.log(error);
+            },
+          });
+        });
+
+
+
+
+    </script>
+  </body>
+</html>
